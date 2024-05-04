@@ -1,5 +1,5 @@
 
-import { FormControl, FormLabel, InputLabel, MenuItem, Select, Stack } from "@mui/material";
+import { FormControl, FormLabel, TextField, InputLabel, MenuItem, Autocomplete, Stack } from "@mui/material";
 import * as React from "react";
 
 export interface SimpleSelectProps {
@@ -15,8 +15,6 @@ export interface SimpleSelectProps {
   defaultMenu?: any;
   name?: string;
   placeholder?: string;
-  testId?: string;
-  internalLabel?: boolean;
 }
 
 const SimpleSelect = (props: SimpleSelectProps) => {
@@ -30,43 +28,37 @@ const SimpleSelect = (props: SimpleSelectProps) => {
     value,
     width = "140px",
     sx,
-    defaultMenu, // to set first select option which is not in list
     name,
     placeholder = "",
-    testId = "",
-    internalLabel = false,
   } = props;
 
   return (
-    <FormControl sx={{ m: 0, minWidth: width, ...sx }}>
-      {!internalLabel ? (
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <FormLabel component="legend">
-            {label} {required && label ? <span>*</span> : null}
-          </FormLabel>
-        </Stack>
-      ) : label ? (
-        <InputLabel sx={{ top: "6px" }}>{label}</InputLabel>
-      ) : null}
+    <FormControl sx={{ m: 0, width: width, ...sx }}>
+      <InputLabel sx={{ top: "6px" }}>{label}</InputLabel>
 
       <Stack sx={{ margin: "4px 0" }}>
-        <Select
-          name={name}
-          placeholder={placeholder}
-          required={required}
+        <Autocomplete
+          id={name}
           disabled={disabled}
           value={value}
           onChange={(e) =>onChange}
-          defaultValue={defaultMenu?.value}
-          label={internalLabel && label ? label : null}>
-          {list?.map((item: any) => (
-            <MenuItem key={item?.value} value={item?.value} disabled={item?.disabled}>
+          multiple={false}
+          getOptionLabel={(option: any) => option?.label}
+          isOptionEqualToValue={(option: any) => option?.value === value}
+          renderInput={(params) => (
+          <TextField {...params} placeholder={placeholder} />
+          )}
+          options={list}
+          renderOption={(props, option) => {
+            return (
+              <MenuItem key={option?.value} value={option?.value} component='li' sx={{whiteSpace: 'pre-line'}} {...props}>
               <Stack direction="row" alignItems="center" gap={1}>
-                {item?.startAdornment} {item?.label} {item?.endAdornment}
+                {option?.startAdornment} {option?.label} {option?.endAdornment}
               </Stack>
             </MenuItem>
-          ))}
-        </Select>
+            )
+          }}
+          />
       </Stack>
     </FormControl>
   );

@@ -18,6 +18,27 @@ export const Theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+    styleOverrides: {
+        root: {
+            ".MuiOutlinedInput-root": {
+        padding: '0px',
+            },
+            fontSize: '12px'
+        },
+        listbox: {
+            padding: '8px'
+        },
+        paper: {
+            borderRadius: '12px',
+        },
+        option: {
+            borderRadius: '8px',
+            marginBottom: '4px',
+            padding: '4px 8px'
+        }
+    }
+    },
     MuiCardActions: {
         styleOverrides: {
             root: {

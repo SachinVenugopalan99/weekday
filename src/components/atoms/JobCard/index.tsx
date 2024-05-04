@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Card , Box, CardMedia, Stack, Typography, CardActions, Button, CardContent} from "@mui/material";
+import {Card , Box, CardMedia, Link, Stack, Typography, CardActions, Button, CardContent} from "@mui/material";
 
 interface JobCardProps{
     jobDetail: any;
@@ -45,9 +45,11 @@ const JobCard:FC<JobCardProps> = ({jobDetail}) => {
         </Typography>
        </CardContent>: null}
         <CardActions sx={{display: 'flex', flexDirection: 'column'}}>
-        <Button fullWidth sx={{backgroundColor: '#55efc4' , p: '8px 16px', color: 'black', fontSize: '500'}}>
-        ⚡ Easy Apply
-        </Button>
+        <Stack sx={{backgroundColor: '#55efc4' , p: '8px 16px', borderRadius: '4px', fontSize: '500', width: '100%'}}>
+        <Link  href={jobDetail?.jdLink} underline='none' color='black' target='_blank' rel="noreferrer">
+            ⚡ Easy Apply
+        </Link>
+        </Stack>
         <Button fullWidth sx={{backgroundColor: '#4943da', p: '8px 16px', color: 'white', fontSize: '500', marginLeft: '0px !important', marginTop: '8px', ':hover': {color: 'black'} }}>
         Unlock referral asks
         </Button> 
