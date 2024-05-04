@@ -58,5 +58,5 @@ export const useFetchJobs = () => {
     };
   }, [handleScroll]);
 
-    return {data}
+    return {data, isFetchingData}
 }
