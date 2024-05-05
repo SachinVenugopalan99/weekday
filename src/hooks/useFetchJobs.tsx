@@ -1,12 +1,17 @@
 import {useState, useEffect, useCallback, useRef, useMemo} from 'react'
-import { apiSettings } from '../api/api';
+import { useDispatch, useSelector } from '../store';
+import jobRedux from '../store/modules/jobs';
 
 export const useFetchJobs = () => {
-  const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [existingPages, setExistingPages] = useState(new Set());
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [filters, setFilters] = useState<any>({role: '', experience: '', location: '', salary: '', company: ''});
+
+  const dispatch = useDispatch();
+  const rootState = useSelector((state) => state);
+  const jobs = jobRedux.getters.jobs(rootState);
+  const isJobsLoading = jobRedux.getters.isJobsLoading(rootState);
 
   const isLoading = useRef(false);
 
@@ -20,8 +25,7 @@ export const useFetchJobs = () => {
         limit: LIMIT,
         offset: (page - 1) * LIMIT
     }
-    const newData = await apiSettings.fetchWeekDayJobs(body);
-    setData((prev) => [...prev, ...newData?.jdList])
+    const newData: any = await dispatch(jobRedux.actions.jobs(body));
     setHasMore(page <=Math.ceil(newData?.totalCount / LIMIT))
     const tempSet = new Set(existingPages);
     tempSet.add(page);
@@ -44,11 +48,11 @@ export const useFetchJobs = () => {
     document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
-    if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && hasMore) {
+    if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && !isJobsLoading && hasMore) {
       // Increment the page
       setPage((prev) => prev + 1);
     }
-  }, [hasMore]);
+  }, [hasMore, isJobsLoading]);
 
   // Attach the scroll event listener
   useEffect(() => {
@@ -66,7 +70,7 @@ export const useFetchJobs = () => {
 
 
   const filteredData = useMemo(() => {
-    let temp = [...data];
+    let temp = [...jobs];
 
     if (filters?.role) {
     temp = temp?.filter((item) => item?.jobRole?.toLowerCase() === filters?.role?.toLowerCase())
@@ -85,7 +89,7 @@ export const useFetchJobs = () => {
     }
 
   return temp;
-  }, [filters, data])
+  }, [filters, jobs])
 
-    return {data: filteredData, isFetchingData: isLoading.current, filters, handleFilterChange}
+    return {data: filteredData, isFetchingData: isJobsLoading, filters, handleFilterChange}
 }
