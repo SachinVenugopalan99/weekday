@@ -44,7 +44,7 @@ export const useFetchJobs = () => {
     document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
-    if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading.current && hasMore) {
+    if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && hasMore) {
       // Increment the year offset to fetch previous years
       setPage((prev) => prev + 1);
     }
@@ -78,7 +78,7 @@ export const useFetchJobs = () => {
     temp = temp?.filter((item) => item?.location?.toLowerCase() === filters?.location?.toLowerCase())
     }
     if (filters?.salary) {
-    temp = temp?.filter((item) => item?.salary >= parseInt(filters?.salary))
+    temp = temp?.filter((item) => item?.minJdSalary >= parseInt(filters?.salary))
     }
     if (filters?.company) {
     temp = temp?.filter((item) => item?.companyName?.toLowerCase()?.includes(filters?.company?.toLowerCase()))

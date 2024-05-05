@@ -20,13 +20,11 @@ const HomePage = () => {
     overscan: 5,
   });
 
-  console.log(virtualizer?.getVirtualItems())
-
   return (
     <Box sx={{ flexGrow: 1, p: '25px', width: '100%' }}>
       <Stack spacing={2} width='100%' mb={2} sx={{display: 'flex', flexDirection: 'row', flexFlow: 'wrap', alignItems: 'center'}}>
       <SimpleSelect placeholder='Roles' value={filters?.role} name='role' list={ROLES} width='160px' sx={{ mr: '8px !important' }} onChange={handleFilterChange}/>
-      <SimpleSelect placeholder='Experience' value={filters?.experience} name='experience' width='160px' sx={{mt:'0px !important', mr: '8px !important'}}  list={Array.from({length: 10}, (_v, i) => ({label: `${i+1}`, value: i+1}))} onChange={handleFilterChange}/>
+      <SimpleSelect placeholder='Experience' value={filters?.experience} name='experience' width='160px' sx={{mt:'0px !important', mr: '8px !important'}}  list={Array.from({length: 10}, (_v, i) => ({label: `${i+1}`, value: `${i+1}`}))} onChange={handleFilterChange}/>
       <SimpleSelect placeholder='Location' value={filters?.location} name='location' width='160px' sx={{mt:'0px !important', mr: '8px !important'}}  list={LOCATION} onChange={handleFilterChange}/>
       <SimpleSelect placeholder='Min Base Pay Salary' value={filters?.salary} name='salary' width='160px' sx={{mt:'0px !important', mr: '8px !important' }}  list={MIN_BASE_PAY} onChange={handleFilterChange}/>
       <TextField placeholder='Search company Name' name='company' sx={{mt:'0px !important', mr: '8px !important'}} onChange={useDebounce((e: any) => handleFilterChange('company', e.target.value), 1000)}/>
