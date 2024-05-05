@@ -22,7 +22,7 @@ export const Theme = createTheme({
     styleOverrides: {
         root: {
             ".MuiOutlinedInput-root": {
-        padding: '0px',
+            padding: '0px',
             },
             fontSize: '12px'
         },
@@ -36,6 +36,16 @@ export const Theme = createTheme({
             borderRadius: '8px',
             marginBottom: '4px',
             padding: '4px 8px'
+        }
+    }
+    },
+    MuiInputBase : {
+    styleOverrides: {
+        root: {
+            marginTop: '14px',
+            ".css-1lkr5rz-MuiInputBase-input-MuiOutlinedInput-input ": {
+            padding: '8px 4px'
+            }
         }
     }
     },

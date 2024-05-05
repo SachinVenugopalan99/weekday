@@ -6,21 +6,21 @@ export const useFetchJobs = () => {
     const [page, setPage] = useState<number>(1);
     const [existingPages, setExistingPages] = useState(new Set());
     const [isFetchingData, setIsFetchingData] = useState<boolean>(false);
-    const [totalCount, setTotalCount] = useState<any>(null);
+    const [totalPages, setTotalPages] = useState<any>(null);
 
     const LIMIT = 10;
 
   const fetchData = async () => {
   try{
-    if (!existingPages.has(page)) {
     setIsFetchingData(true);
+    if (!existingPages.has(page)) {
     const body = {
         limit: LIMIT,
         offset: (page - 1) * LIMIT
     }
     const newData = await apiSettings.fetchWeekDayJobs(body);
-    console.log(newData);
     setData((prev) => [...prev, ...newData?.jdList])
+    setTotalPages(Math.ceil(newData?.totalCount / LIMIT))
     const tempSet = new Set(existingPages);
     tempSet.add(page);
     setExistingPages(tempSet);
@@ -32,21 +32,23 @@ export const useFetchJobs = () => {
       }
    };
 
+   console.log(existingPages)
+
    useEffect(() => {
    fetchData()
    }, [page])
 
       // Implement the infinite scroll event handler
   const handleScroll = useCallback(() => {
-    const scrollPosition = window.innerHeight + window.scrollY;
-    const documentHeight = document.body.scrollHeight;
+      const { scrollTop, clientHeight, scrollHeight } =
+        document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
-    if (scrollPosition >= documentHeight - 150 && !isFetchingData) {
+    if (scrollTop + clientHeight >= scrollHeight - 100 && !isFetchingData && (totalPages === null || page <= totalPages)) {
       // Increment the year offset to fetch previous years
       setPage((prev) => prev + 1);
     }
-  }, [isFetchingData]);
+  }, [isFetchingData, page, totalPages]);
 
   // Attach the scroll event listener
   useEffect(() => {

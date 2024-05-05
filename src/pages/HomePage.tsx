@@ -3,23 +3,20 @@ import { useFetchJobs } from '../hooks/useFetchJobs'
 import {Box, Grid, Typography, Stack, TextField} from "@mui/material";
 import JobCard from '../components/atoms/JobCard';
 import SimpleSelect from '../components/atoms/SimpleSelect/SimpleSelect';
+import { ROLES, LOCATION, MIN_BASE_PAY } from '../utils/constants';
 
 const HomePage = () => {
 
   const {data, isFetchingData} = useFetchJobs();
 
-  const ROLES = [{label :'Frontend', value: 'frontend'}, {label: 'Backend', value: 'backend'}];
-  const LOCATION = [{label :'Mumbai', value: 'mumbai'}, {label: 'Delhi', value: 'delhi'}, {label: 'Bangalore', value: 'bangalore'}];
-  const MIN_BASE_PAY = [{label: '0L', value: 0}, {label: '10L', value: 10}, {label: '20L', value: 20}, {label: '30L', value: 30}, {label: '40L', value: 40}, {label: '50L', value: 50}, {label: '60L', value: 60}, {label: '70L', value: 70}]
-
   return (
     <Box sx={{ flexGrow: 1, p: '25px', width: '100%' }}>
-      <Stack spacing={2} width='100%' mb={2} sx={{display: 'flex', flexDirection: 'row'}}>
-      <SimpleSelect placeholder='Roles' list={ROLES} width='140px' onChange={() => {}}/>
-      <SimpleSelect placeholder='Experience' width='140px'  list={Array.from({length: 10}, (_v, i) => ({label: i+1, value: i+1}))} onChange={() => {}}/>
-      <SimpleSelect placeholder='Location' width='140px'  list={LOCATION} onChange={() => {}}/>
-      <SimpleSelect placeholder='Min Base Pay' width='140px'  list={MIN_BASE_PAY} onChange={() => {}}/>
-      <TextField placeholder='Search companies'/>
+      <Stack spacing={2} width='100%' mb={2} sx={{display: 'flex', flexDirection: 'row', flexFlow: 'wrap', alignItems: 'center'}}>
+      <SimpleSelect placeholder='Roles' list={ROLES} width='160px' sx={{ mr: '8px !important' }} onChange={() => {}}/>
+      <SimpleSelect placeholder='Experience' width='160px' sx={{mt:'0px !important', mr: '8px !important'}}  list={Array.from({length: 10}, (_v, i) => ({label: i+1, value: i+1}))} onChange={() => {}}/>
+      <SimpleSelect placeholder='Location' width='160px' sx={{mt:'0px !important', mr: '8px !important'}}  list={LOCATION} onChange={() => {}}/>
+      <SimpleSelect placeholder='Min Base Pay Salary' width='160px' sx={{mt:'0px !important', mr: '8px !important' }}  list={MIN_BASE_PAY} onChange={() => {}}/>
+      <TextField placeholder='Search company Name' sx={{mt:'0px !important', mr: '8px !important'}}/>
       </Stack>
       <Grid
         container
