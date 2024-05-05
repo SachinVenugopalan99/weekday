@@ -43,7 +43,7 @@ export const Theme = createTheme({
     styleOverrides: {
         root: {
             marginTop: '14px',
-            ".css-1lkr5rz-MuiInputBase-input-MuiOutlinedInput-input ": {
+            ".MuiOutlinedInput-input ": {
             padding: '8px 4px'
             }
         }
