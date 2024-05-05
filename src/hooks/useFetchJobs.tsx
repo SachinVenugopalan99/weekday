@@ -1,18 +1,17 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect, useCallback, useRef} from 'react'
 import { apiSettings } from '../api/api';
 
 export const useFetchJobs = () => {
     const [data, setData] = useState<any[]>([]);
     const [page, setPage] = useState<number>(1);
     const [existingPages, setExistingPages] = useState(new Set());
-    const [isFetchingData, setIsFetchingData] = useState<boolean>(false);
-    const [totalPages, setTotalPages] = useState<any>(null);
-
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const isLoading = useRef(false);
     const LIMIT = 10;
 
   const fetchData = async () => {
   try{
-    setIsFetchingData(true);
+    isLoading.current = true;
     if (!existingPages.has(page)) {
     const body = {
         limit: LIMIT,
@@ -20,7 +19,7 @@ export const useFetchJobs = () => {
     }
     const newData = await apiSettings.fetchWeekDayJobs(body);
     setData((prev) => [...prev, ...newData?.jdList])
-    setTotalPages(Math.ceil(newData?.totalCount / LIMIT))
+    setHasMore(page <=Math.ceil(newData?.totalCount / LIMIT))
     const tempSet = new Set(existingPages);
     tempSet.add(page);
     setExistingPages(tempSet);
@@ -28,11 +27,9 @@ export const useFetchJobs = () => {
       } catch(err) {
       console.error(err);
       } finally {
-        setIsFetchingData(false)
+        isLoading.current = false;
       }
    };
-
-   console.log(existingPages)
 
    useEffect(() => {
    fetchData()
@@ -44,11 +41,11 @@ export const useFetchJobs = () => {
         document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
-    if (scrollTop + clientHeight >= scrollHeight - 100 && !isFetchingData && (totalPages === null || page <= totalPages)) {
+    if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading.current && hasMore) {
       // Increment the year offset to fetch previous years
       setPage((prev) => prev + 1);
     }
-  }, [isFetchingData, page, totalPages]);
+  }, [hasMore]);
 
   // Attach the scroll event listener
   useEffect(() => {
@@ -60,5 +57,5 @@ export const useFetchJobs = () => {
     };
   }, [handleScroll]);
 
-    return {data, isFetchingData}
+    return {data, isFetchingData: isLoading.current}
 }
