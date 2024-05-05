@@ -11,7 +11,6 @@ export const useFetchJobs = () => {
   const dispatch = useDispatch();
   const rootState = useSelector((state) => state);
   const jobs = jobRedux.getters.jobs(rootState);
-  const isJobsLoading = jobRedux.getters.isJobsLoading(rootState);
 
   const isLoading = useRef(false);
 
@@ -48,7 +47,7 @@ export const useFetchJobs = () => {
     document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
-    if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && hasMore) {
+    if (scrollTop + clientHeight >= scrollHeight && !isLoading.current && hasMore) {
       // Increment the page
       setPage((prev) => prev + 1);
     }
