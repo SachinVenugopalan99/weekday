@@ -1,13 +1,16 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react'
+import {useState, useEffect, useCallback, useRef, useMemo} from 'react'
 import { apiSettings } from '../api/api';
 
 export const useFetchJobs = () => {
-    const [data, setData] = useState<any[]>([]);
-    const [page, setPage] = useState<number>(1);
-    const [existingPages, setExistingPages] = useState(new Set());
-    const [hasMore, setHasMore] = useState<boolean>(true);
-    const isLoading = useRef(false);
-    const LIMIT = 10;
+  const [data, setData] = useState<any[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [existingPages, setExistingPages] = useState(new Set());
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [filters, setFilters] = useState<any>({role: '', experience: '', location: '', salary: '', company: ''});
+
+  const isLoading = useRef(false);
+
+  const LIMIT = 10;
 
   const fetchData = async () => {
   try{
@@ -29,7 +32,7 @@ export const useFetchJobs = () => {
       } finally {
         isLoading.current = false;
       }
-   };
+  };
 
    useEffect(() => {
    fetchData()
@@ -37,8 +40,8 @@ export const useFetchJobs = () => {
 
       // Implement the infinite scroll event handler
   const handleScroll = useCallback(() => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
+  const { scrollTop, clientHeight, scrollHeight } =
+    document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
     if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading.current && hasMore) {
@@ -57,5 +60,32 @@ export const useFetchJobs = () => {
     };
   }, [handleScroll]);
 
-    return {data, isFetchingData: isLoading.current}
+  const handleFilterChange = useCallback((name: string, val: string | number) => {
+  setFilters((prev: any) => ({...prev, [name]: val}))
+  }, [])
+
+
+  const filteredData = useMemo(() => {
+    let temp = [...data];
+
+    if (filters?.role) {
+    temp = temp?.filter((item) => item?.jobRole?.toLowerCase() === filters?.role?.toLowerCase())
+    }
+    if (filters?.experience) {
+    temp = temp?.filter((item) => item?.minExp && item?.minExp <= parseInt(filters?.experience))
+    }
+    if (filters?.location) {
+    temp = temp?.filter((item) => item?.location?.toLowerCase() === filters?.location?.toLowerCase())
+    }
+    if (filters?.salary) {
+    temp = temp?.filter((item) => item?.salary >= parseInt(filters?.salary))
+    }
+    if (filters?.company) {
+    temp = temp?.filter((item) => item?.companyName?.toLowerCase()?.includes(filters?.company?.toLowerCase()))
+    }
+
+  return temp;
+  }, [filters, data])
+
+    return {data: filteredData, isFetchingData: isLoading.current, filters, handleFilterChange}
 }

@@ -1,28 +1,23 @@
 
-import { FormControl, FormLabel, TextField, InputLabel, MenuItem, Autocomplete, Stack } from "@mui/material";
-import * as React from "react";
+import { FormControl, TextField, InputLabel, MenuItem, Autocomplete, Stack } from "@mui/material";
 
 export interface SimpleSelectProps {
   label?: any;
-  size?: "small" | "medium";
   list: any[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>, data?: any | any) => void;
+  onChange: (name: string, e: any) => void;
   disabled?: boolean;
-  value?: string | null;
-  required?: boolean;
+  value?: string | undefined;
   width?: string | number;
   sx?: any;
   defaultMenu?: any;
-  name?: string;
+  name: string;
   placeholder?: string;
 }
 
 const SimpleSelect = (props: SimpleSelectProps) => {
   const {
     label,
-    size = "small",
     list = [],
-    required = false,
     onChange,
     disabled = false,
     value,
@@ -40,18 +35,20 @@ const SimpleSelect = (props: SimpleSelectProps) => {
         <Autocomplete
           id={name}
           disabled={disabled}
-          value={value}
-          onChange={(e) =>onChange}
           multiple={false}
-          getOptionLabel={(option: any) => option?.label}
+          getOptionLabel={(option: any) => option?.label || ''}
+          inputValue={value}
           isOptionEqualToValue={(option: any) => option?.value === value}
+          onChange={(_event, newValue) => {
+            onChange(name, newValue?.value || '');
+        }}
           renderInput={(params) => (
-          <TextField {...params} placeholder={placeholder} />
+          <TextField {...params} name={name} placeholder={placeholder} />
           )}
           options={list}
           renderOption={(props, option) => {
             return (
-              <MenuItem key={option?.value} value={option?.value} component='li' sx={{whiteSpace: 'pre-line'}} {...props}>
+              <MenuItem {...props} key={option?.value} value={option?.value} component='li' sx={{whiteSpace: 'pre-line'}} >
               <Stack direction="row" alignItems="center" gap={1}>
                 {option?.startAdornment} {option?.label} {option?.endAdornment}
               </Stack>
