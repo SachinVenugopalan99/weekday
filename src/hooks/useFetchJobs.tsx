@@ -45,7 +45,7 @@ export const useFetchJobs = () => {
 
     // Check if the user has scrolled to the bottom of the page
     if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && hasMore) {
-      // Increment the year offset to fetch previous years
+      // Increment the page
       setPage((prev) => prev + 1);
     }
   }, [hasMore]);
