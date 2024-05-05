@@ -48,11 +48,11 @@ export const useFetchJobs = () => {
     document.documentElement;
 
     // Check if the user has scrolled to the bottom of the page
-    if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && !isJobsLoading && hasMore) {
+    if (scrollTop + clientHeight >= scrollHeight - 20 && !isLoading.current && hasMore) {
       // Increment the page
       setPage((prev) => prev + 1);
     }
-  }, [hasMore, isJobsLoading]);
+  }, [hasMore]);
 
   // Attach the scroll event listener
   useEffect(() => {
@@ -91,5 +91,5 @@ export const useFetchJobs = () => {
   return temp;
   }, [filters, jobs])
 
-    return {data: filteredData, isFetchingData: isJobsLoading, filters, handleFilterChange}
+    return {data: filteredData, isFetchingData: isLoading.current, filters, handleFilterChange}
 }
